@@ -7,8 +7,6 @@ export default async function handler(req, res) {
     const { endpoint, ...restQueries } = query;
 
     const url = new URL(`https://learning-faisal-217.myshopify.com/admin/api/2023-10/${endpoint}`);
-
-    // Add remaining query parameters (like ids)
     Object.keys(restQueries).forEach(key => {
         url.searchParams.append(key, restQueries[key]);
     });
@@ -24,13 +22,22 @@ export default async function handler(req, res) {
         });
 
         const responseText = await response.text();
-        console.log('Response Status:', response.status);
-        console.log('Response Text:', responseText);
-
         const data = JSON.parse(responseText);
+
+        // 👉 Add CORS headers:
+        res.setHeader('Access-Control-Allow-Origin', '*'); // Or set your store URL instead of '*'
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+        res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
         res.status(response.status).json(data);
     } catch (error) {
         console.error('Proxy error:', error);
+
+        // 👉 Add CORS headers even on error:
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+        res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
         res.status(500).json({ error: 'Internal Server Error' });
     }
 }
