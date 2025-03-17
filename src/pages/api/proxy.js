@@ -4,7 +4,7 @@ export default async function handler(req, res) {
     const { method, body, headers, query } = req;
 
     // Define the Shopify Admin API endpoint
-    const shopifyAdminUrl = `https://learning-faisal-217.myshopify.com/admin/api/2023-10/${query.endpoint}`;
+    const shopifyAdminUrl = `https://learning-faisal-217.myshopify.com/admin/api/2025-01/${query.endpoint}`;
 
     try {
         // Forward the request to Shopify Admin API
@@ -25,6 +25,6 @@ export default async function handler(req, res) {
         res.status(response.status).json(data);
     } catch (error) {
         console.error('Proxy error:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        res.status(500).json({ error: 'Internal Server Error Updated' });
     }
 }
