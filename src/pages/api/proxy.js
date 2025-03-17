@@ -1,5 +1,4 @@
 import fetch from 'node-fetch';
-import https from 'https';
 
 export default async function handler(req, res) {
     const { method, body, headers, query } = req;
@@ -17,14 +16,19 @@ export default async function handler(req, res) {
                 ...headers,
             },
             body: method !== 'GET' ? JSON.stringify(body) : undefined,
-            agent: new https.Agent({ rejectUnauthorized: false }), // Disable SSL validation
         });
 
-        // Get the response from Shopify
-        const data = await response.json();
-
-        // Send the response back to the client
-        res.status(response.status).json(data);
+        // Check if the response is JSON
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            const data = await response.json();
+            res.status(response.status).json(data);
+        } else {
+            // Handle non-JSON responses (e.g., HTML errors)
+            const text = await response.text();
+            console.error('Non-JSON response:', text);
+            res.status(response.status).json({ error: 'Non-JSON response', details: text });
+        }
     } catch (error) {
         console.error('Proxy error:', error);
         res.status(500).json({ error: 'Internal Server Error' });
