@@ -12,7 +12,7 @@ export default async function handler(req, res) {
             method,
             headers: {
                 'Content-Type': 'application/json',
-                'X-Shopify-Access-Token': process.env.SHOPIFY_ADMIN_ACCESS_TOKEN, // Use environment variable
+                'X-Shopify-Access-Token': process.env.SHOPIFY_ADMIN_ACCESS_TOKEN,
                 ...headers,
             },
             body: method !== 'GET' ? JSON.stringify(body) : undefined,
