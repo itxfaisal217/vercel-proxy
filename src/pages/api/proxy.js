@@ -18,17 +18,16 @@ export default async function handler(req, res) {
             body: method !== 'GET' ? JSON.stringify(body) : undefined,
         });
 
-        // Check if the response is JSON
-        const contentType = response.headers.get('content-type');
-        if (contentType && contentType.includes('application/json')) {
-            const data = await response.json();
-            res.status(response.status).json(data);
-        } else {
-            // Handle non-JSON responses (e.g., HTML errors)
-            const text = await response.text();
-            console.error('Non-JSON response:', text);
-            res.status(response.status).json({ error: 'Non-JSON response', details: text });
-        }
+        // Log the response status and text
+        console.log('Response Status:', response.status);
+        const responseText = await response.text();
+        console.log('Response Text:', responseText);
+
+        // Attempt to parse the response as JSON
+        const data = JSON.parse(responseText);
+
+        // Send the response back to the client
+        res.status(response.status).json(data);
     } catch (error) {
         console.error('Proxy error:', error);
         res.status(500).json({ error: 'Internal Server Error' });
