@@ -40,5 +40,38 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
 
 $.get("https://vercel-proxy-three-xi.vercel.app/api/proxy?endpoint=products.json?ids=8978766954783",function (data) {
-    console.log(data)
+console.log(data)
 })
+
+```bash
+
+  const url = "https://vercel-proxy-three-xi.vercel.app/api/proxy?endpoint=products.json";
+
+  const data = {
+    product: {
+      title: "Burton Custom Freestyle 151",
+      body_html: "<strong>Good snowboard!</strong>",
+      vendor: "Burton",
+      product_type: "Snowboard",
+      variants: [
+        { option1: "First", price: "10.00", sku: "123" },
+        { option1: "Second", price: "20.00", sku: "123" }
+      ]
+    }
+  };
+
+  fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  })
+  .then(response => response.json())
+  .then(result => {
+    console.log("Product Created:", result);
+  })
+  .catch(error => {
+    console.error("Error:", error);
+  });
+```
